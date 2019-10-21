@@ -1,14 +1,14 @@
 import React from "react"
 import { DragDropContext, Droppable } from "react-beautiful-dnd"
+import axios from "axios"
 
 import StudentDraggable from "./components/StudentDraggable"
 
-import mockData from "./mockData"
 import TeamList from "./components/TeamList"
 
 const App = () => {
   const [student, setStudent] = React.useState("")
-  const [students, setStudents] = React.useState(mockData)
+  const [students, setStudents] = React.useState("")
 
   const renderStudents = () => {
     const noTeam = students.filter(student => student.team === 0)
@@ -19,6 +19,10 @@ const App = () => {
     })
   }
 
+  const getStudents = () => {
+    axios.get()
+  }
+
   const handleSubmit = e => {
     e.preventDefault()
     setStudents([
@@ -26,6 +30,15 @@ const App = () => {
       { id: students.length + 1, name: student, team: 0 }
     ])
   }
+
+  // const handleOnClick = () => {
+  //   students.map(student => {
+  //     student.team = Math.floor(Math.random() * 3) + 1
+  //   })
+
+  //   console.log(...students)
+  //   document.location.reload()
+  // }
 
   const onDragEnd = result => {
     if (!result.destination) {
@@ -58,6 +71,7 @@ const App = () => {
                 />
                 <button>Add Student</button>
               </form>
+              {/* <button onClick={handleOnClick}>Random Team</button> */}
               {renderStudents()}
               <div className="separator-skew" />
             </div>
