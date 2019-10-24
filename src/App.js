@@ -34,25 +34,45 @@ const App = () => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    setStudents([
-      ...students,
-      { id: students.length + 1, name: student, team: 0 }
-    ])
+    axios
+      .post("https://drag-n-drop-db.herokuapp.com/member", {
+        name: student,
+        team: "0"
+      })
+      .then(response => {
+        setStudents([
+          ...students,
+          { id: response.data.id, name: student, team: 0 }
+        ])
+      })
+      .catch(error => {
+        console.log("post newStudent error", error)
+      })
+    setInterval(() => {
+      document.location.reload()
+    }, 100)
   }
 
-  // const handleOnClick = () => {
-  //   students.map(student => {
-  //     axios
-  //       .put(`https://drag-n-drop-db.herokuapp.com/member/${student.id}`)
-  //       .then(response => {
-  //         setStudents((response.data.team = Math.floor(Math.random() * 3) + 1))
-  //       })
-  //     return
-  //   })
-
-  //   console.log(...students)
-  //   // document.location.reload()
-  // }
+  const handleOnClick = () => {
+    students.map(student => {
+      axios
+        .put(`https://drag-n-drop-db.herokuapp.com/member/${student.id}`, {
+          id: student.id,
+          name: student.name,
+          team: (Math.floor(Math.random() * 3) + 1).toString()
+        })
+        .then(response => {
+          setStudents(response.data)
+        })
+        .catch(e => {
+          console.log("put error", e)
+          return
+        })
+    })
+    setInterval(() => {
+      document.location.reload()
+    }, 1000)
+  }
 
   const onDragEnd = result => {
     if (!result.destination) {
@@ -83,21 +103,23 @@ const App = () => {
                   value={student}
                   onChange={e => setStudent(e.target.value)}
                 />
-                {/* <button>Add Student</button> */}
-                <AddStudent student={student} />
+                <button>Add Student</button>
+                {/* <AddStudent setStudents={setStudents} student={student} /> */}
               </form>
-              {/* <button onClick={handleOnClick}>Random Team</button> */}
-              {renderStudents()}
+              <button onClick={handleOnClick}>Random Team</button>
+              {students.length > 0 ? renderStudents() : null}
               <div className="separator-skew" />
             </div>
           )}
         </Droppable>
 
-        <div className="teams-wrapper">
-          <TeamList students={students} number={"1"} />
-          <TeamList students={students} number={"2"} />
-          <TeamList students={students} number={"3"} />
-        </div>
+        {students.length > 0 ? (
+          <div className="teams-wrapper">
+            <TeamList students={students} number={"1"} />
+            <TeamList students={students} number={"2"} />
+            <TeamList students={students} number={"3"} />
+          </div>
+        ) : null}
       </div>
     </DragDropContext>
   )
