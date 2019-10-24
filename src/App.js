@@ -2,7 +2,6 @@ import React, { useEffect } from "react"
 import { DragDropContext, Droppable } from "react-beautiful-dnd"
 import axios from "axios"
 
-import AddStudent from "./components/AddStudent"
 import StudentDraggable from "./components/StudentDraggable"
 
 import TeamList from "./components/TeamList"
