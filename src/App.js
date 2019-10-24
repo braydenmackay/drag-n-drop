@@ -48,6 +48,9 @@ const App = () => {
       .catch(error => {
         console.log("post newStudent error", error)
       })
+    setInterval(() => {
+      document.location.reload()
+    }, 100)
   }
 
   const handleOnClick = () => {
@@ -68,7 +71,7 @@ const App = () => {
     })
     setInterval(() => {
       document.location.reload()
-    }, 100)
+    }, 1000)
   }
 
   const onDragEnd = result => {
