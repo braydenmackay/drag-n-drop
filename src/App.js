@@ -12,7 +12,6 @@ const App = () => {
   const [students, setStudents] = React.useState([])
 
   const renderStudents = () => {
-    console.log(students)
     const noTeam = students.filter(student => student.team === "0")
     return noTeam.map((student, index) => {
       return (
@@ -35,24 +34,41 @@ const App = () => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    setStudents([
-      ...students,
-      { id: students.length + 1, name: student, team: 0 }
-    ])
+    axios
+      .post("https://drag-n-drop-db.herokuapp.com/member", {
+        name: student,
+        team: "0"
+      })
+      .then(response => {
+        setStudents([
+          ...students,
+          { id: response.data.id, name: student, team: 0 }
+        ])
+      })
+      .catch(error => {
+        console.log("post newStudent error", error)
+      })
   }
 
   const handleOnClick = () => {
     students.map(student => {
       axios
-        .put(`https://drag-n-drop-db.herokuapp.com/member/${student.id}`)
-        .then(response => {
-          setStudents((response.data.team = Math.floor(Math.random() * 3) + 1))
+        .put(`https://drag-n-drop-db.herokuapp.com/member/${student.id}`, {
+          id: student.id,
+          name: student.name,
+          team: (Math.floor(Math.random() * 3) + 1).toString()
         })
-      return
+        .then(response => {
+          setStudents(response.data)
+        })
+        .catch(e => {
+          console.log("put error", e)
+          return
+        })
     })
-
-    console.log(...students)
-    // document.location.reload()
+    setInterval(() => {
+      document.location.reload()
+    }, 100)
   }
 
   const onDragEnd = result => {
@@ -85,10 +101,10 @@ const App = () => {
                   onChange={e => setStudent(e.target.value)}
                 />
                 <button>Add Student</button>
-                {/* <AddStudent student={student} /> */}
+                {/* <AddStudent setStudents={setStudents} student={student} /> */}
               </form>
               <button onClick={handleOnClick}>Random Team</button>
-              {renderStudents()}
+              {students.length > 0 ? renderStudents() : null}
               <div className="separator-skew" />
             </div>
           )}
