@@ -7,7 +7,8 @@ const TeamList = props => {
   const [students] = React.useState(props.students)
 
   const renderStudents = () => {
-    const teamPride = students.filter(student => student.team === +props.number)
+    console.log("team list", students)
+    const teamPride = students.filter(student => student.team == +props.number)
     return teamPride.map((student, index) => {
       return (
         <StudentDraggable key={student.id} student={student} index={index} />

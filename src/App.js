@@ -12,6 +12,7 @@ const App = () => {
   const [students, setStudents] = React.useState([])
 
   const renderStudents = () => {
+    console.log(students)
     const noTeam = students.filter(student => student.team === "0")
     return noTeam.map((student, index) => {
       return (
@@ -40,19 +41,19 @@ const App = () => {
     ])
   }
 
-  // const handleOnClick = () => {
-  //   students.map(student => {
-  //     axios
-  //       .put(`https://drag-n-drop-db.herokuapp.com/member/${student.id}`)
-  //       .then(response => {
-  //         setStudents((response.data.team = Math.floor(Math.random() * 3) + 1))
-  //       })
-  //     return
-  //   })
+  const handleOnClick = () => {
+    students.map(student => {
+      axios
+        .put(`https://drag-n-drop-db.herokuapp.com/member/${student.id}`)
+        .then(response => {
+          setStudents((response.data.team = Math.floor(Math.random() * 3) + 1))
+        })
+      return
+    })
 
-  //   console.log(...students)
-  //   // document.location.reload()
-  // }
+    console.log(...students)
+    // document.location.reload()
+  }
 
   const onDragEnd = result => {
     if (!result.destination) {
@@ -83,21 +84,23 @@ const App = () => {
                   value={student}
                   onChange={e => setStudent(e.target.value)}
                 />
-                {/* <button>Add Student</button> */}
-                <AddStudent student={student} />
+                <button>Add Student</button>
+                {/* <AddStudent student={student} /> */}
               </form>
-              {/* <button onClick={handleOnClick}>Random Team</button> */}
+              <button onClick={handleOnClick}>Random Team</button>
               {renderStudents()}
               <div className="separator-skew" />
             </div>
           )}
         </Droppable>
 
-        <div className="teams-wrapper">
-          <TeamList students={students} number={"1"} />
-          <TeamList students={students} number={"2"} />
-          <TeamList students={students} number={"3"} />
-        </div>
+        {students.length > 0 ? (
+          <div className="teams-wrapper">
+            <TeamList students={students} number={"1"} />
+            <TeamList students={students} number={"2"} />
+            <TeamList students={students} number={"3"} />
+          </div>
+        ) : null}
       </div>
     </DragDropContext>
   )
