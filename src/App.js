@@ -12,9 +12,6 @@ const App = () => {
 
   return (
     <div>
-      <button className="theme-button" onClick={handleTheme}>
-        Change Theme
-      </button>
       {mode ? (
         <div className="app">
           <RenderLists />
@@ -24,6 +21,9 @@ const App = () => {
           <RenderLists />
         </div>
       )}
+      <button className="theme-button" onClick={handleTheme}>
+        Change Theme
+      </button>
     </div>
   )
 }

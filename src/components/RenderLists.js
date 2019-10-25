@@ -118,7 +118,9 @@ const RenderLists = () => {
                 />
                 <button>Add Student</button>
               </form>
-              <button onClick={handleOnClick}>Random Team</button>
+              <button className="random-btn" onClick={handleOnClick}>
+                Random Team
+              </button>
               {students.length > 0 ? renderStudents() : null}
               <div className="separator-skew" />
             </div>
