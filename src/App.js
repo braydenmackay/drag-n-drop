@@ -5,12 +5,8 @@ const App = () => {
   const [mode, setMode] = React.useState(true)
 
   const handleTheme = () => {
-    if (mode) {
+    if (mode || !mode) {
       setMode(!mode)
-      console.log("mode change true", mode)
-    } else {
-      setMode(!mode)
-      console.log("mode change false", mode)
     }
   }
 

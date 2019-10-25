@@ -64,7 +64,6 @@ const RenderLists = () => {
         })
         .catch(e => {
           console.log("put error", e)
-          return
         })
     })
     setInterval(() => {
