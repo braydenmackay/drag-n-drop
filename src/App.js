@@ -2,7 +2,6 @@ import React, { useEffect } from "react"
 import { DragDropContext, Droppable } from "react-beautiful-dnd"
 import axios from "axios"
 
-import AddStudent from "./components/AddStudent"
 import StudentDraggable from "./components/StudentDraggable"
 
 import TeamList from "./components/TeamList"
@@ -104,7 +103,6 @@ const App = () => {
                   onChange={e => setStudent(e.target.value)}
                 />
                 <button>Add Student</button>
-                {/* <AddStudent setStudents={setStudents} student={student} /> */}
               </form>
               <button onClick={handleOnClick}>Random Team</button>
               {students.length > 0 ? renderStudents() : null}
