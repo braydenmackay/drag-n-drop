@@ -9,6 +9,7 @@ import TeamList from "./components/TeamList"
 const App = () => {
   const [student, setStudent] = React.useState("")
   const [students, setStudents] = React.useState([])
+  const [mode, setMode] = React.useState(true)
 
   const renderStudents = () => {
     const noTeam = students.filter(student => student.team === "0")
@@ -24,7 +25,6 @@ const App = () => {
       .get("https://drag-n-drop-db.herokuapp.com/members")
       .then(response => {
         setStudents(response.data)
-        console.log(response.data)
       })
       .catch(error => {
         console.log("getStudents error", error)
@@ -81,44 +81,96 @@ const App = () => {
     const droppedStudent = students.find(
       student => student.id === result.draggableId
     )
-    droppedStudent.team = +result.destination.droppableId
+    droppedStudent.team = result.destination.droppableId
+    axios
+      .put(`https://drag-n-drop-db.herokuapp.com/member/${droppedStudent.id}`, {
+        id: droppedStudent.id,
+        name: droppedStudent.name,
+        team: result.destination.droppableId
+      })
+      .then(response => {
+        setStudents(response.data)
+      })
+      .catch(e => {
+        console.log("put error", e)
+        return
+      })
+    setInterval(() => {
+      document.location.reload()
+    }, 100)
   }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="app">
-        <Droppable droppableId={"0"}>
-          {provided => (
-            <div
-              className="left-student-list"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-            >
-              {provided.placeholder}
-              <form onSubmit={handleSubmit}>
-                <input
-                  type="text"
-                  placeholder="Enter Student Name"
-                  value={student}
-                  onChange={e => setStudent(e.target.value)}
-                />
-                <button>Add Student</button>
-              </form>
-              <button onClick={handleOnClick}>Random Team</button>
-              {students.length > 0 ? renderStudents() : null}
-              <div className="separator-skew" />
-            </div>
-          )}
-        </Droppable>
+      {mode ? (
+        <div className="app">
+          <Droppable droppableId={"0"}>
+            {provided => (
+              <div
+                className="left-student-list"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {provided.placeholder}
+                <form onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    placeholder="Enter Student Name"
+                    value={student}
+                    onChange={e => setStudent(e.target.value)}
+                  />
+                  <button>Add Student</button>
+                </form>
+                <button onClick={handleOnClick}>Random Team</button>
+                {students.length > 0 ? renderStudents() : null}
+                <div className="separator-skew" />
+              </div>
+            )}
+          </Droppable>
 
-        {students.length > 0 ? (
-          <div className="teams-wrapper">
-            <TeamList students={students} number={"1"} />
-            <TeamList students={students} number={"2"} />
-            <TeamList students={students} number={"3"} />
-          </div>
-        ) : null}
-      </div>
+          {students.length > 0 ? (
+            <div className="teams-wrapper">
+              <TeamList students={students} number={"1"} />
+              <TeamList students={students} number={"2"} />
+              <TeamList students={students} number={"3"} />
+            </div>
+          ) : null}
+        </div>
+      ) : (
+        <div className="app-night">
+          <Droppable droppableId={"0"}>
+            {provided => (
+              <div
+                className="left-student-list"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {provided.placeholder}
+                <form onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    placeholder="Enter Student Name"
+                    value={student}
+                    onChange={e => setStudent(e.target.value)}
+                  />
+                  <button>Add Student</button>
+                </form>
+                <button onClick={handleOnClick}>Random Team</button>
+                {students.length > 0 ? renderStudents() : null}
+                <div className="separator-skew" />
+              </div>
+            )}
+          </Droppable>
+
+          {students.length > 0 ? (
+            <div className="teams-wrapper">
+              <TeamList students={students} number={"1"} />
+              <TeamList students={students} number={"2"} />
+              <TeamList students={students} number={"3"} />
+            </div>
+          ) : null}
+        </div>
+      )}
     </DragDropContext>
   )
 }
