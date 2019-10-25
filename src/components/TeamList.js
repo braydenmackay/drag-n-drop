@@ -23,7 +23,9 @@ const TeamList = props => {
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
-          <div className="team-title">team {props.number}</div>
+          <div className="team-title">
+            <p>Team {props.number}</p>
+          </div>
           <div className="team-students">{renderStudents()}</div>
           {provided.placeholder}
         </div>
